@@ -1,5 +1,4 @@
-import { Page } from "@playwright/test";
-import { get } from "node:http";
+import { test as base,  Page } from "@playwright/test";
 import logger from "../../utils/logger";
 
 async function consoleErrorLogger({ page }: { page: Page}, use: (arg: void) => Promise<void>) {
@@ -43,3 +42,7 @@ async function consoleErrorLogger({ page }: { page: Page}, use: (arg: void) => P
 
     await use();
 }
+
+export const test = base.extend<{ _consoleErrorLoger: void }>({
+    _consoleErrorLoger: [consoleErrorLogger, { scope: 'test', auto: true, box: true, title: 'Console Error Logger' }],
+});
