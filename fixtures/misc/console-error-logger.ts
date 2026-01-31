@@ -15,8 +15,18 @@ async function consoleErrorLogger({ page }: { page: Page}, use: (arg: void) => P
     }
 
     page.on('console', msg => {
+        // Only log actual errors, not warnings or info messages
+        if (msg.type() !== 'error') {
+            return;
+        }
+
         const text = msg.text();
         const loc = msg.location?.();
+
+        // Ignore React DevTools recommendation message
+        if (text.includes('Download the React DevTools')) {
+            return;
+        }
 
         if(text.includes('Failed to load resource')) {
             const currentHost = getCurrentHost();
