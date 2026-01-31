@@ -1,0 +1,29 @@
+{
+  "name": "qa-challenge",
+  "version": "1.0.0",
+  "description": "Hi! Thank you for your interest in [EstateSpace][g3website].",
+  "main": "index.js",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:ui": "playwright test --ui",
+    "report": "playwright show-report"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jptabares/qa-challenge.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jptabares/qa-challenge/issues"
+  },
+  "homepage": "https://github.com/jptabares/qa-challenge#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.58.1",
+    "@types/node": "^25.1.0",
+    "dotenv": "^17.2.3",
+    "winston": "^3.19.0"
+  }
+}
