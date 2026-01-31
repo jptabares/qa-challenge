@@ -1,159 +1,497 @@
-# EstateSpace QA Engineer Automation Challenge (Playwright)
-Hi! Thank you for your interest in [EstateSpace][g3website].
+# QA Automation Framework Documentation
 
-As part of our evaluation process, we ask candidates to complete a short, open‑ended take‑home challenge. There is no single correct solution. Instead, we want to understand your **testing judgment**, **automation strategy**, and how you reason about real‑world UI and API trade‑offs.
+## Overview
 
-We recognize that any take‑home challenge represents an investment of your time. Please keep the scope reasonable and focus on strong fundamentals rather than completeness. If you are unsuccessful, you are free to reuse the code you developed for this challenge in any way you like.
+This is a **Playwright-based automated test suite** for a React Todo application. The framework implements modern test architecture patterns including fixture composition, page objects, and comprehensive API testing capabilities.
 
-If you are successful, we will use this work as a starting point for deeper technical discussion during follow‑up interviews.
-
-# The Challenge
-EstateSpace builds product experiences that consume REST‑based services and present data across web and mobile clients. We value **clarity**, **resilience**, **observability**, and **maintainable test suites**.
-
-Your task is to implement automated tests using **Playwright** for a simple React‑based **Todo** application.
-
-## Application Overview
-The application has the following characteristics:
-
-- Users can add a todo via a text input and an **Add** button
-- Todos are loaded and saved via a REST API at:
-
-```
-/api/todos
-```
-
-- The application runs locally at:
-
-```
-http://localhost:3000
-```
-
-## Minimum Challenge Requirements
-### 1. Setup & Baseline Test
-- Install and configure **Playwright Test**
-- Add a script to `package.json` to run tests via:
-
-```
-npx playwright test
-```
-
-- Implement one basic test that:
-  - Opens the application home page
-  - Verifies that the title **"Todo List"** is visible
-
-### 2. Core User Journeys
-Implement automated tests for the following flows.
-
-#### A. Add a New Todo
-- Enter **"Buy milk"** into the todo input
-- Click the **Add** button
-- Assert that the new todo appears in the list
-
-#### B. Validation Behavior
-- Attempt to add a todo with no text
-- Click the **Add** button
-- Assert that:
-  - A validation message is displayed
-  - No new todo is added
+| Property | Value |
+|----------|-------|
+| **Framework** | Playwright Test v1.58.1 |
+| **Language** | TypeScript |
+| **Target Application** | React Todo App |
+| **Base URL** | http://localhost:3000 |
 
 ---
 
-### 3. API & Asynchronous Behavior
-Implement at least one test that explicitly validates async behavior.
+## Project Structure
 
-- When adding a todo, wait for the **POST `/api/todos`** request to complete using:
-  - `page.waitForResponse`, or
-  - `page.waitForRequest`
-- Verify that the UI updates **only after** a successful API response
+```
+qa-challenge/
+├── .env                              # Environment configuration
+├── .github/
+│   └── workflows/
+│       └── playwright.yml            # GitHub Actions CI/CD workflow
+├── .gitignore                        # Git ignore rules
+├── package.json                      # npm dependencies and scripts
+├── playwright.config.ts              # Playwright test configuration
+├── README.md                         # Project documentation
+├── QA-AUTOMATION.md                  # This file
+├── components/
+│   └── index.ts                      # Base component classes
+├── fixtures/
+│   ├── expect.ts                     # Custom expect implementation
+│   ├── playwright.ts                 # Playwright exports
+│   ├── pages.ts                      # Page fixture definitions
+│   ├── test.ts                       # Merged test fixtures
+│   └── misc/
+│       ├── console-error-logger.ts   # Browser console logging
+│       └── screenshot.ts             # Screenshot utilities
+├── pages/
+│   └── todo.page.ts                  # Todo page object
+├── tests/
+│   ├── example.spec.ts               # Example tests (Playwright default)
+│   └── todo.spec.ts                  # Main todo app tests
+└── utils/
+    ├── logger.ts                     # Winston logger utility
+    └── timeouts.ts                   # Timeout constants
+```
 
-You may mock API behavior using `page.route` to simulate:
-
-- Successful loading of an initial todo list
-- A server error (e.g. HTTP 500) when adding a todo, and assert that an error state is displayed
-
-## Where to Concentrate Your Effort
-After meeting the minimum requirements, choose **one or two** areas below to explore further.
-
-### A. Test Architecture & Maintainab
-- Test organization and readability
-- Use of helpers, fixtures, or abstractions
-- Clear separation between UI behavior and API concerns
-
-### B. Resilience & Edge Cases
-- Graceful handling of failures
-- Avoiding flaky tests
-- Explicit waiting strategies
-- Error and empty states
-
-### C. Cross‑Browser or Visual Coverage
-Examples:
-- Running tests across **Chromium** and **WebKit**
-- Simple visual assertions using `toHaveScreenshot`
-- Component testing with Playwright (optional)
-
-## Prerequisites
-1. A basic understanding of source code control, [git][git-scm] is required.
-2. You must make your code available via a [GitHub][github] account.
-3. You should be familiar with consuming data APIs.
+---
 
 ## Getting Started
-1. Fork this [repository][repository].
-2. Clone the fork to your local machine.
-3. Start coding.
-4. Commit changes to your fork as you see fit.
-5. Try to limit time investment to 30-60 mins max for the initial “get it to work approach”. 
 
-## Submission
-When you are comfortable with your results, please email your fork to
-[support@estatespace.com](mailto:support@estatespace.com). Please keep your emails short and to the point.
+### Prerequisites
 
-- Share the git repo link that contains your code and readme with steps to execute
-- A short **README** describing:
-  - How to run the React application
-  - How to execute Playwright tests and view the HTML report
-- Your Playwright configuration file
-- Your test files (e.g. `tests/todo.spec.ts`)
-- You are free to use a throwaway GitHub account.
-- Any specific notes or further information you would like to add about your submittal, should be included in the GitHub project.
+- Node.js (LTS version recommended)
+- npm
 
-## Evaluation Criteria
-We will evaluate:
-- Correctness and completeness of the minimum requirements
-- Test reliability and async handling
-- API mocking and error coverage
-- Code structure and readability
-- Pragmatic use of Playwright features
-- Clarity of written communication
-- Nice to have:
-  - Step-by-step commits : Start coding and make sure to commit logically. As soon
-    as things are working, push a commit. It also enables coming back if you mess
-    up anything going forward. 
-  - Killer readme
+### Installation
 
-We recognize there are many ways to approach automated testing. Please do not feel you must implement everything. Use your strengths to your advantage and document where and why you focused your effort.
+```bash
+# Install dependencies
+npm ci
 
-Creativity, sound judgment, and a clear testing philosophy matter more than exhaustive coverage.
+# Install Playwright browsers
+npx playwright install --with-deps
+```
 
-Please do not overthink think this or get too wrapped up in making a bullet proof application. This is a basic
-challenge. Spending significant amounts of time ensuring production level quality is not required. Rather,
-we would like to see your architectural choices and approach to coding over production ready, visually
-appealing features.
+### Running Tests
 
-### License
-This project is [MIT licensed][mitlicense].
+```bash
+# Run all tests
+npx playwright test
 
-[g3website]:https://www.griffingroupglobal.com
-[git-scm]:https://git-scm.com/
-[github]:https://github.com/
-[nodejs]:https://nodejs.org/en/
-[TDD]:https://en.wikipedia.org/wiki/Test-driven_development
-[ES6]:http://www.ecma-international.org/ecma-262/6.0/
-[eslint]:https://eslint.org/
-[airbnb-eslint]:https://www.npmjs.com/package/eslint-config-airbnb
-[mocha]:https://mochajs.org/
-[repository]:https://github.com/GriffinGroupGlobal/qa-challenge
-[mitlicense]:https://en.wikipedia.org/wiki/MIT_License
-[commonmark]:https://spec.commonmark.org/]
-[docker]:https://www.docker.com/
-[kubernetes]:https://kubernetes.io/
-[reactnative]:https://reactnative.dev/
+# Run tests in headed mode (visible browser)
+npx playwright test --headed
+
+# Run specific test file
+npx playwright test tests/todo.spec.ts
+
+# Run tests in debug mode
+npx playwright test --debug
+
+# Run tests for specific browser
+npx playwright test --project=chromium
+npx playwright test --project=firefox
+npx playwright test --project=webkit
+
+# List available tests
+npx playwright test --list
+
+# View HTML report
+npx playwright show-report
+```
+
+---
+
+## Dependencies
+
+| Package | Version | Purpose |
+|---------|---------|---------|
+| @playwright/test | ^1.58.1 | Test framework and browser automation |
+| @types/node | ^25.1.0 | TypeScript types for Node.js |
+| dotenv | ^17.2.3 | Environment variable loader |
+| winston | ^3.19.0 | Structured logging library |
+
+---
+
+## Configuration
+
+### Playwright Configuration (`playwright.config.ts`)
+
+| Setting | Value | Description |
+|---------|-------|-------------|
+| Test Directory | `./tests` | Location of test files |
+| Parallel Execution | `true` | Tests run in parallel |
+| Retries (CI) | `2` | Retry failed tests twice on CI |
+| Workers (CI) | `1` | Single worker on CI for stability |
+| Action Timeout | `30s` | Timeout for individual actions |
+| Navigation Timeout | `4 min` | Timeout for page navigation |
+| Screenshot | `only-on-failure` | Capture screenshots on test failure |
+| Video | `retain-on-failure` | Record video, keep only on failure |
+| Trace | `on-first-retry` | Collect trace on first retry |
+
+### Browser Projects
+
+| Project | Description |
+|---------|-------------|
+| chromium | Google Chrome/Chromium |
+| firefox | Mozilla Firefox |
+| webkit | Safari/WebKit |
+
+> **Note:** Mobile profiles (Pixel 5, iPhone 12) and branded browsers (Edge, Chrome) are configured but commented out.
+
+### Environment Variables (`.env`)
+
+```env
+BASE_URL=http://localhost:3000
+LOG_LEVEL=info  # Optional: debug, warn, error
+```
+
+---
+
+## Architecture
+
+### Fixture Composition Pattern
+
+The framework uses Playwright's `mergeTests()` to combine multiple fixtures into a single unified test instance:
+
+```typescript
+// fixtures/test.ts
+export const test = mergeTests(pagesTest, screenshotTest, createErrorLogger);
+```
+
+This provides:
+- **TodoPage fixture** - Auto-instantiated page object
+- **Screenshot fixture** - Visual regression testing
+- **Console Error Logger** - Browser console error monitoring
+
+### Component Hierarchy
+
+```
+Component<T>           # Base component class
+├── Frame              # For iframe handling
+└── GlobalComponent    # For page-level components
+    └── TodoPage       # Todo application page object
+```
+
+### Page Object Pattern
+
+Page objects encapsulate page interactions and locators:
+
+```typescript
+// pages/todo.page.ts
+export class TodoPage extends GlobalComponent {
+  title: Locator;
+  todoInput: Locator;
+  addButton: Locator;
+  todoList: Locator;
+
+  async goto(): Promise<void>;
+  async addTodoItem(item: string): Promise<void>;
+  async addTodoItemAndWaitForApi(item: string, timeout?: number): Promise<void>;
+  getTodoItem(text: string): Locator;
+  async getTodoCount(): Promise<number>;
+}
+```
+
+---
+
+## Test Suites
+
+### Todo Tests (`tests/todo.spec.ts`)
+
+#### Setup & Baseline
+| Test | Description |
+|------|-------------|
+| should display the Todo List title | Verifies heading visibility |
+
+#### Core User Journeys
+| Test | Description |
+|------|-------------|
+| should add a new todo 'Buy milk' | Tests adding a todo item |
+| should show validation when adding empty todo | Tests input validation |
+
+#### API & Async Behavior
+| Test | Description |
+|------|-------------|
+| should wait for POST /api/todos and update UI | Validates async API interaction |
+| should load initial todos from mocked API | Tests API mocking with GET requests |
+| should display error state when POST returns 500 | Tests error handling |
+| should handle slow network response gracefully | Tests 1-second delayed response |
+
+#### Edge Cases & Resilience
+| Test | Description |
+|------|-------------|
+| should handle whitespace-only input as invalid | Input validation edge case |
+| should handle special characters in todo text | XSS prevention testing |
+| should handle empty todo list state | Empty state handling |
+
+---
+
+## Utilities
+
+### Timeout Constants (`utils/timeouts.ts`)
+
+```typescript
+SECOND           = 1,000 ms
+MINUTE           = 60,000 ms
+OBSERVE_TIMEOUT  = 10 seconds
+ACTION_TIMEOUT   = 30 seconds
+EXPECT_TIMEOUT   = 30 seconds
+DEFAULT_TIMEOUT  = 2 minutes
+SLOW_TIMEOUT     = 6 minutes
+LONG_TIMEOUT     = 12 minutes
+PAGE_LOAD_TIMEOUT = 4 minutes
+```
+
+### Logger (`utils/logger.ts`)
+
+Winston-based logger with console output:
+
+```typescript
+import logger from './utils/logger';
+
+logger.info('Test started');
+logger.error('[BROWSER] Console Error at url:line:column');
+logger.debug('Debug information');
+```
+
+**Format:** `YYYY-MM-DD HH:mm:ss [LEVEL]: message`
+
+---
+
+## Fixtures
+
+### Page Fixtures (`fixtures/pages.ts`)
+
+Provides auto-instantiated page objects:
+
+```typescript
+import { test } from '../fixtures/test';
+
+test('example', async ({ todoPage }) => {
+  await todoPage.goto();
+  await todoPage.addTodoItem('My todo');
+});
+```
+
+### Screenshot Fixture (`fixtures/misc/screenshot.ts`)
+
+Visual regression testing with consistent configuration:
+
+```typescript
+test('visual test', async ({ checkScreenshot, page }) => {
+  await page.goto('/');
+  await checkScreenshot(); // Full page screenshot
+  await checkScreenshot(page.locator('.component')); // Component screenshot
+});
+```
+
+**Options:**
+- Max diff pixel ratio: 2%
+- Animations: disabled
+- Caret: hidden
+
+### Console Error Logger (`fixtures/misc/console-error-logger.ts`)
+
+Automatically logs browser console errors during tests:
+
+- Listens to `page.on('console')` events
+- Logs errors with source location (URL, line, column)
+- Filters cross-origin errors intelligently
+- Auto-applied fixture (runs automatically for all tests)
+
+---
+
+## CI/CD Integration
+
+### GitHub Actions Workflow (`.github/workflows/playwright.yml`)
+
+| Step | Description |
+|------|-------------|
+| Checkout | Clone repository |
+| Setup Node.js | Configure Node LTS |
+| Install Dependencies | `npm ci` |
+| Install Browsers | Playwright with system deps |
+| Run Tests | `npx playwright test` |
+| Upload Report | HTML report artifact (30-day retention) |
+
+**Triggers:**
+- Push to `main` or `master` branch
+- Pull requests to `main` or `master`
+
+**Configuration:**
+- Runner: `ubuntu-latest`
+- Timeout: 60 minutes
+
+---
+
+## Best Practices Implemented
+
+### Resilient Locators
+
+Multiple selector fallbacks for stability:
+
+```typescript
+todoList: Locator = this.page.locator('[test-id="todo-list"], ul, .todo-list');
+```
+
+### Accessible Selectors
+
+Using role-based selectors for accessibility:
+
+```typescript
+title: Locator = this.page.getByRole('heading', { name: 'Todo List' });
+addButton: Locator = this.page.getByRole('button', { name: 'Add Todo' });
+```
+
+### API Mocking
+
+Intercepting and mocking API responses:
+
+```typescript
+await page.route('**/api/todos', async (route) => {
+  if (route.request().method() === 'GET') {
+    await route.fulfill({
+      status: 200,
+      body: JSON.stringify([{ id: 1, text: 'Mocked Todo' }])
+    });
+  }
+});
+```
+
+### Response Waiting
+
+Waiting for API responses before assertions:
+
+```typescript
+async addTodoItemAndWaitForApi(item: string, timeout = ACTION_TIMEOUT) {
+  const responsePromise = this.page.waitForResponse(
+    (response) => response.url().includes('/api/todos') && response.request().method() === 'POST',
+    { timeout }
+  );
+  await this.addTodoItem(item);
+  await responsePromise;
+}
+```
+
+---
+
+## Reporting
+
+### Available Reporters
+
+| Reporter | Description |
+|----------|-------------|
+| HTML | Interactive report (opens on failure) |
+| List | Console output with test list |
+
+### Viewing Reports
+
+```bash
+# After test run, open HTML report
+npx playwright show-report
+```
+
+### Artifacts on CI
+
+- HTML reports uploaded as GitHub Actions artifacts
+- Retention: 30 days
+- Includes screenshots and videos for failed tests
+
+---
+
+## Extending the Framework
+
+### Adding a New Page Object
+
+1. Create file in `pages/` directory
+2. Extend `GlobalComponent`
+3. Define locators and methods
+4. Add to `fixtures/pages.ts`
+
+```typescript
+// pages/login.page.ts
+import { Locator } from '../fixtures/playwright';
+import { GlobalComponent } from '../components';
+
+export class LoginPage extends GlobalComponent {
+  usernameInput: Locator = this.page.getByLabel('Username');
+  passwordInput: Locator = this.page.getByLabel('Password');
+  submitButton: Locator = this.page.getByRole('button', { name: 'Login' });
+
+  async login(username: string, password: string): Promise<void> {
+    await this.usernameInput.fill(username);
+    await this.passwordInput.fill(password);
+    await this.submitButton.click();
+  }
+}
+```
+
+### Adding a New Fixture
+
+1. Create fixture in `fixtures/` or `fixtures/misc/`
+2. Define fixture using `test.extend()`
+3. Merge into main test in `fixtures/test.ts`
+
+```typescript
+// fixtures/misc/auth.ts
+import { test as base } from '@playwright/test';
+
+export const authTest = base.extend<{ authenticate: () => Promise<void> }>({
+  authenticate: async ({ page }, use) => {
+    await use(async () => {
+      // Authentication logic
+    });
+  },
+});
+```
+
+---
+
+## Troubleshooting
+
+### Common Issues
+
+| Issue | Solution |
+|-------|----------|
+| Tests failing on CI but passing locally | Check for hardcoded waits, use `waitFor` methods |
+| Flaky tests | Increase timeouts, add proper wait conditions |
+| Element not found | Verify selectors, check for dynamic loading |
+| API mocking not working | Ensure route pattern matches actual URL |
+
+### Debug Mode
+
+```bash
+# Run with Playwright Inspector
+npx playwright test --debug
+
+# Run with headed browser
+npx playwright test --headed
+
+# Collect trace for debugging
+npx playwright test --trace on
+```
+
+### Logs
+
+Check browser console errors in test output (logged by console-error-logger fixture).
+
+---
+
+## Test Coverage Summary
+
+| Category | Tests | Description |
+|----------|-------|-------------|
+| Baseline | 1 | Page title verification |
+| Core Functionality | 2 | Adding todos, validation |
+| API Integration | 4 | Mocking, waiting, error states |
+| Edge Cases | 3 | Whitespace, XSS, empty states |
+| **Total** | **10+** | Comprehensive coverage |
+
+---
+
+## Contributing
+
+1. Create feature branch from `master`
+2. Follow existing patterns for page objects and fixtures
+3. Add tests for new functionality
+4. Ensure all tests pass locally
+5. Create pull request
+
+---
+
+## License
+
+This project is part of a QA challenge assessment.
