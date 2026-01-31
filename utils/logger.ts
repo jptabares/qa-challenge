@@ -1,7 +1,7 @@
 import { createLogger, format, transports } from 'winston';
 import dotenv from 'dotenv';
 
-dotenv.config({ path: '../.env' });
+dotenv.config({ path: '../.env', quiet: true });
 
 const logLevel = process.env.LOG_LEVEL || 'info';
 
