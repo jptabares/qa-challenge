@@ -3,7 +3,12 @@
   "version": "1.0.0",
   "description": "Hi! Thank you for your interest in [EstateSpace][g3website].",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:ui": "playwright test --ui",
+    "report": "playwright show-report"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jptabares/qa-challenge.git"
