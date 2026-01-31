@@ -25,7 +25,6 @@ qa-challenge/
 ├── package.json                      # npm dependencies and scripts
 ├── playwright.config.ts              # Playwright test configuration
 ├── README.md                         # Project documentation
-├── QA-AUTOMATION.md                  # This file
 ├── components/
 │   └── index.ts                      # Base component classes
 ├── fixtures/
@@ -41,6 +40,15 @@ qa-challenge/
 ├── tests/
 │   ├── example.spec.ts               # Example tests (Playwright default)
 │   └── todo.spec.ts                  # Main todo app tests
+├── todoApp/                          # Application under test
+│   ├── app/
+│   │   ├── api/todos/route.js        # REST API endpoints
+│   │   ├── layout.js                 # Root layout
+│   │   └── page.js                   # Main Todo UI
+│   ├── data/                         # Data persistence
+│   ├── lib/db.js                     # Database utilities
+│   ├── next.config.js                # Next.js config
+│   └── package.json                  # App dependencies
 └── utils/
     ├── logger.ts                     # Winston logger utility
     └── timeouts.ts                   # Timeout constants
@@ -64,6 +72,111 @@ npm ci
 # Install Playwright browsers
 npx playwright install --with-deps
 ```
+
+---
+
+## Todo Application (Application Under Test)
+
+The framework includes a **Next.js Todo application** located in the `todoApp/` directory. This is the application being tested by the Playwright test suite.
+
+### TodoApp Structure
+
+```
+todoApp/
+├── app/
+│   ├── api/
+│   │   └── todos/
+│   │       └── route.js          # REST API endpoints (GET, POST, DELETE)
+│   ├── layout.js                 # Root layout component
+│   └── page.js                   # Main Todo UI component
+├── data/
+│   └── todos.json                # Data persistence (file-based)
+├── lib/
+│   └── db.js                     # Database utility functions
+├── .next/                        # Next.js build output
+├── next.config.js                # Next.js configuration
+└── package.json                  # App dependencies
+```
+
+### TodoApp Installation
+
+```bash
+# Navigate to todoApp directory
+cd todoApp
+
+# Install dependencies
+npm install
+```
+
+### Running the TodoApp
+
+```bash
+# Development mode (with hot reload)
+cd todoApp
+npm run dev
+# App runs at http://localhost:3000
+
+# Production build
+cd todoApp
+npm run build
+npm run start
+```
+
+### TodoApp API Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/todos/` | Fetch all todos |
+| POST | `/api/todos/` | Create a new todo |
+| DELETE | `/api/todos/?id={id}` | Delete a todo by ID |
+
+**POST Request Body:**
+```json
+{
+  "text": "Todo item text"
+}
+```
+
+**Response Codes:**
+| Code | Description |
+|------|-------------|
+| 200 | Success (GET, DELETE) |
+| 201 | Created (POST) |
+| 400 | Bad request (missing required fields) |
+| 500 | Server error |
+
+### Debugging the TodoApp
+
+```bash
+# Run in development mode with verbose logging
+cd todoApp
+npm run dev
+
+# Check browser DevTools:
+# - Network tab: Monitor API requests
+# - Console tab: View React errors and logs
+# - Application tab: Inspect local storage/cookies
+
+# Debug API routes:
+# Add console.log statements in todoApp/app/api/todos/route.js
+# Logs appear in the terminal running the dev server
+```
+
+### Running Tests Against TodoApp
+
+Ensure the TodoApp is running before executing tests:
+
+```bash
+# Terminal 1: Start the TodoApp
+cd todoApp
+npm run dev
+
+# Terminal 2: Run Playwright tests
+cd ..
+npx playwright test
+```
+
+---
 
 ### Running Tests
 
